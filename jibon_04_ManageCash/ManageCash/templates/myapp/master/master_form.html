@@ -1,0 +1,105 @@
+{% extends 'myapp/master/base.html' %}
+
+{% block body %}
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 30px;
+        box-shadow: 0 15px 35px rgba(255, 182, 193, 0.2);
+        border: 2px solid #fff0f5;
+        text-align: center;
+    }
+
+    .form-container h2 {
+        color: #ff85a1;
+        font-size: 28px;
+        margin-bottom: 25px;
+        font-weight: 700;
+    }
+
+    /* Styling the Django form paragraphs */
+    .form-container p {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    /* Styling Labels */
+    .form-container label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #a58e8e;
+        margin-bottom: 8px;
+        margin-left: 5px;
+    }
+
+    /* Styling Inputs, Selects, and Textareas */
+    .form-container input, 
+    .form-container select, 
+    .form-container textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #ffe5ec;
+        border-radius: 15px;
+        background-color: #fffafa;
+        color: #5a4a4a;
+        box-sizing: border-box; /* Crucial for padding */
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .form-container input:focus {
+        border-color: #ffafcc;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(255, 175, 204, 0.2);
+    }
+
+    /* Custom Pookie Button */
+    .pookie-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #ffafcc 0%, #ff85a1 100%);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(255, 133, 161, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .pookie-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 133, 161, 0.4);
+    }
+
+    /* Helper text for file uploads */
+    input[type="file"] {
+        background: transparent;
+        border: 2px dashed #ffc8dd;
+        padding: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="form-container">
+    <h2>✨ {{ Title }} ✨</h2>
+    
+    <form method='POST' enctype='multipart/form-data'>
+        {% csrf_token %}
+        
+        <div class="pookie-fields">
+            {{ form.as_p }}
+        </div>
+
+        <button type="submit" class="pookie-btn">
+            {{ submit_btn|default:"Save Changes 🎀" }}
+        </button>
+    </form>
+</div>
+{% endblock body %}

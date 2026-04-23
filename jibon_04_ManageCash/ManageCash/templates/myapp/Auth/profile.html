@@ -1,0 +1,123 @@
+{% extends 'myapp/master/base.html' %}
+
+{% block body %}
+<style>
+    :root {
+        --pookie-pink: #ffdae9;
+        --soft-white: #fffafa;
+        --text-color: #5a4a4a;
+        --accent-pink: #ff85a1;
+    }
+
+    .profile-card {
+        background: var(--soft-white);
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 30px;
+        box-shadow: 0 10px 25px rgba(255, 182, 193, 0.3);
+        text-align: center;
+        border: 2px solid var(--pookie-pink);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .profile-img-container {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .profile-card h2 {
+        font-size: 24px;
+        margin-bottom: 5px;
+        color: var(--accent-pink);
+    }
+
+    .info-group {
+        margin: 15px 0;
+        text-align: left;
+        background: rgba(255, 218, 233, 0.2);
+        padding: 10px 20px;
+        border-radius: 15px;
+    }
+
+    .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #b08d8d;
+        display: block;
+    }
+
+    .info-value {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .edit-btn {
+        display: inline-block;
+        margin-top: 25px;
+        padding: 12px 30px;
+        background-color: var(--accent-pink);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        transition: transform 0.2s, background-color 0.2s;
+        box-shadow: 0 4px 10px rgba(255, 133, 161, 0.4);
+    }
+
+    .edit-btn:hover {
+        background-color: #ff5c81;
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .emoji-decor {
+        font-size: 20px;
+    }
+</style>
+
+<div class="profile-card">
+    <div class="profile-img-container">
+        {% if profile.profile_pic %}
+            <img src="{{ profile.profile_pic.url }}" class="profile-img" alt="Profile">
+        {% else %}
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed={{ request.user.username }}" class="profile-img" alt="Default Profile">
+        {% endif %}
+    </div>
+
+    <h2><span class="emoji-decor">✨</span> {{ profile.full_name|default:request.user.username }} <span class="emoji-decor">✨</span></h2>
+    <p style="margin-top: -5px; color: #a5a5a5;">@{{ request.user.username }}</p>
+
+    <div class="info-group">
+        <span class="info-label">Email Address</span>
+        <span class="info-value">{{ request.user.email }}</span>
+    </div>
+
+    <div class="info-group">
+        <span class="info-label">Phone</span>
+        <span class="info-value">{{ profile.phone|default:"🎀 No phone added" }}</span>
+    </div>
+
+    <div class="info-group">
+        <span class="info-label">Location</span>
+        <span class="info-value">{{ profile.address|default:"☁️ Somewhere cozy" }}</span>
+    </div>
+
+    <a href="{% url 'edit_profile' %}" class="edit-btn">
+        Edit Profile 🧸
+    </a>
+</div>
+
+{% endblock body %}

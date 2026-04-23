@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Club 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soft-pink: #ffe4ef;
+            --medium-pink: #ffb6c1;
+            --accent-pink: #ff85b3;
+            --pookie-white: #ffffff;
+            --text-gray: #8a6d78;
+        }
+
+        body {
+            background-color: var(--soft-pink);
+            background-image: radial-gradient(var(--medium-pink) 0.8px, transparent 0.8px);
+            background-size: 24px 24px;
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-gray);
+        }
+
+        .register-container {
+            background: var(--pookie-white);
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(255, 133, 179, 0.15);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            border: 4px solid var(--pookie-white);
+            outline: 2px solid var(--medium-pink);
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--accent-pink);
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+        }
+
+        /* Django form style */
+        form p {
+            text-align: left;
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* Styling for the Django inputs */
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 5px;
+            border: 2px solid var(--soft-pink);
+            border-radius: 18px;
+            box-sizing: border-box;
+            background-color: #fff9fb;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(255, 133, 179, 0.2);
+        }
+
+        /* Small text like help text in Django forms */
+        .helptext {
+            font-size: 0.75rem;
+            color: #bfa3ad;
+            display: block;
+            margin-top: 4px;
+            padding-left: 5px;
+        }
+
+        button {
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(255, 133, 179, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5c99;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 133, 179, 0.4);
+        }
+
+        .login-link {
+            display: block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: var(--accent-pink);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .login-link:hover {
+            color: #ff5c99;
+            text-decoration: underline;
+        }
+
+        .decor {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <h2>Register 🎀</h2>
+        
+        <form method='POST'>
+            {% csrf_token %}
+            
+            <div class="form-fields">
+                {{ form.as_p }}
+            </div>
+            
+            <button type="submit">Create Account 🎀</button>
+        </form>
+
+        <a href='/login/' class="login-link">Already a pookie? Login here</a>
+        
+        <span class="decor">🌸 ✨ 🌸</span>
+    </div>
+
+</body>
+</html>

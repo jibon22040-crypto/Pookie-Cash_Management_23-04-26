@@ -1,0 +1,320 @@
+{% extends 'myapp/master/base.html' %}
+
+{% block body %}
+<style>
+    /* --- Main Container & Base Styling --- */
+    :root {
+        --pookie-pink: #ffafcc;
+        --pookie-rose: #ff85a1;
+        --cash-mint: #7ccb9f;
+        --cash-green: #48a374;
+        --expense-purple: #cdb4db;
+        --expense-lavender: #a594f9;
+        
+        /* Product Shadows - Colored and Muted */
+        --shadow-cash: 10px 10px 30px rgba(124, 203, 159, 0.4);
+        --shadow-spent: 10px 10px 30px rgba(255, 133, 161, 0.4);
+        --shadow-balance: 10px 10px 30px rgba(165, 148, 249, 0.4);
+    }
+
+    /* Gradient Title with a subtle glow */
+    .welcome-header h2 {
+        font-size: 2.8rem;
+        font-weight: 950;
+        background: linear-gradient(135deg, var(--pookie-pink) 0%, var(--pookie-rose) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-top: 40px;
+        filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.4));
+    }
+
+    /* --- Summary Cards Area (Floating UI) --- */
+    .summary-floating-zone {
+        position: relative;
+        padding: 50px 20px;
+        overflow: hidden; /* Contains background animations */
+        margin-bottom: 20px;
+    }
+
+    .summary-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        position: relative; /* Above decorative elements */
+        z-index: 10;
+    }
+
+    .beautiful-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        flex: 1 1 290px;
+        padding: 30px;
+        border-radius: 45px;
+        border: 2px solid white;
+        text-align: center;
+        transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Specialized Hover and Shadow Effects */
+    .card-cash { box-shadow: var(--shadow-cash); }
+    .card-spent { box-shadow: var(--shadow-spent); }
+    .card-balance { box-shadow: var(--shadow-balance); }
+
+    .beautiful-card:hover {
+        transform: translateY(-12px) scale(1.03) rotate(-0.5deg);
+    }
+
+    .beautiful-card .card-value {
+        font-size: 2.4rem;
+        font-weight: 900;
+        display: block;
+        margin-top: 10px;
+    }
+
+    /* --- Background Decorative Elements (Bubbles & Kites) --- */
+    .pookie-bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 70%);
+        backdrop-filter: blur(2px);
+        opacity: 0.7;
+        pointer-events: none;
+        animation: floatBubble infinite ease-in-out;
+    }
+
+    .pookie-kite {
+        position: absolute;
+        width: 40px;
+        height: 60px;
+        background: rgba(255, 133, 161, 0.2);
+        clip-path: polygon(50% 0%, 100% 40%, 50% 100%, 0% 40%);
+        pointer-events: none;
+        opacity: 0.5;
+        animation: floatKite infinite ease-in-out;
+    }
+
+    .pookie-kite::after {
+        content: "➰"; /* Subtle tail emoji */
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 133, 161, 0.4);
+        font-size: 1.2rem;
+    }
+
+    /* --- Unique Animations --- */
+    @keyframes floatBubble {
+        0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
+        50% { transform: translateY(-50px) translateX(20px) scale(1.1); opacity: 0.5; }
+    }
+
+    @keyframes floatKite {
+        0%, 100% { transform: translate(0, 0) rotate(5deg); }
+        25% { transform: translate(15px, -30px) rotate(-5deg); }
+        50% { transform: translate(-10px, -60px) rotate(5deg); }
+        75% { transform: translate(20px, -90px) rotate(-10deg); }
+    }
+
+    /* --- Dual Stream Timeline (Bubble Feed) --- */
+    .dashboard-main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 850px) {
+        .dashboard-main-grid { grid-template-columns: 1fr; }
+    }
+
+    .stream-column {
+        background: rgba(255, 255, 255, 0.5);
+        padding: 25px;
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .stream-header {
+        font-weight: 850;
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+        color: #612020;
+        text-align: center;
+    }
+
+    .transaction-bubble {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 18px 25px;
+        border-radius: 30px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+        border: 1px solid #fff0f5;
+        transition: 0.4s;
+    }
+
+    .transaction-bubble:hover {
+        background: #fffafa;
+        transform: scale(1.02);
+        box-shadow: 0 12px 30px rgba(255, 182, 193, 0.2);
+    }
+
+    .bubble-info { text-align: left; flex-grow: 1; }
+    .bubble-title { font-weight: 700; color: #444; font-size: 1.1rem; }
+    .bubble-date { font-size: 0.8rem; color: #bbb; display: block; }
+
+    .bubble-amount {
+        font-weight: 900;
+        font-size: 1.1rem;
+        padding: 8px 15px;
+        border-radius: 20px;
+        margin-left: 10px;
+    }
+
+    /* Actions inside bubbles */
+    .bubble-actions {
+        display: flex;
+        gap: 8px;
+        margin-left: 15px;
+    }
+
+    .bubble-actions a {
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: 0.3s;
+        opacity: 0.6;
+    }
+
+    .bubble-actions a:hover {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    .cash-bg { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .expense-bg { background: #fce4ec; color: #c2185b; border: 1px solid #f8bbd0; }
+
+    /* --- Centered Action Floating Buttons --- */
+    .floating-actions {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.85);
+        padding: 12px 30px;
+        border-radius: 100px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        display: flex;
+        gap: 20px;
+        z-index: 1000;
+        border: 2px solid white;
+    }
+
+    .action-btn {
+        padding: 12px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        color: white;
+        font-weight: 800;
+        font-size: 0.95rem;
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cash-btn { background: linear-gradient(135deg, var(--cash-mint) 0%, var(--cash-green) 100%); }
+    .expense-btn { background: linear-gradient(135deg, var(--expense-purple) 0%, var(--expense-lavender) 100%); }
+    
+    .action-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+</style>
+
+<div class="welcome-header">
+    <h2>Pookie Whimsy ✨</h2>
+</div>
+
+<div class="summary-floating-zone">
+    <div class="pookie-bubble" style="width:100px; height:100px; top:10%; left:5%; animation-duration: 6s; opacity: 0.5;"></div>
+    <div class="pookie-bubble" style="width:60px; height:60px; bottom:20%; right:15%; animation-duration: 8s; background: rgba(165, 148, 249, 0.1);"></div>
+    <div class="pookie-bubble" style="width:40px; height:40px; top:50%; left:25%; animation-duration: 5s; background: rgba(124, 203, 159, 0.1);"></div>
+    
+    <div class="pookie-kite" style="top:5%; right:20%; animation-duration: 15s; animation-delay: 2s; background: rgba(165, 148, 249, 0.15);"></div>
+    <div class="pookie-kite" style="top:40%; left:10%; animation-duration: 18s; animation-delay: 5s; background: rgba(124, 203, 159, 0.15);"></div>
+
+    <div class="summary-cards-container">
+        <div class="beautiful-card card-cash">
+            <span style="font-size: 50px;">🍯</span>
+            <span class="card-label" style="display:block; margin-top:15px; color:#aaa; font-weight:700; letter-spacing:1px; font-size:0.8rem;">SAVINGS</span>
+            <span class="card-value" style="color:#48a374;">৳{{ total_cash }}</span>
+        </div>
+        <div class="beautiful-card card-spent">
+            <span style="font-size: 50px;">🎁</span>
+            <span class="card-label" style="display:block; margin-top:15px; color:#aaa; font-weight:700; letter-spacing:1px; font-size:0.8rem;">SPENT</span>
+            <span class="card-value" style="color:#ff85a1;">৳{{ total_expense }}</span>
+        </div>
+        <div class="beautiful-card card-balance">
+            <span style="font-size: 50px;">🌈</span>
+            <span class="card-label" style="display:block; margin-top:15px; color:#aaa; font-weight:700; letter-spacing:1px; font-size:0.8rem;">BALANCE</span>
+            <span class="card-value" style="color:#a594f9;">৳{{ balance }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-main-grid">
+    
+    <div class="stream-column">
+        <div class="stream-header">Inflow Feed 🍯</div>
+        {% for c in cash %}
+        <div class="transaction-bubble">
+            <div class="bubble-info">
+                <span class="bubble-title">{{ c.source }}</span>
+                <span class="bubble-date">🗓️ {{ c.datetime|date:"D, d M" }}</span>
+            </div>
+            <div class="bubble-amount cash-bg">+৳{{ c.amount }}</div>
+            <div class="bubble-actions">
+                <a href="{% url 'edit_cash' c.pk %}" title="Edit">📝</a>
+                <a href="{% url 'delete_cash' c.pk %}" title="Delete" onclick="return confirm('Delete this honey?')">🗑️</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align:center; color:#ccc; padding:30px; font-style:italic;">Waiting for honey... ☁️</p>
+        {% endfor %}
+    </div>
+
+    <div class="stream-column">
+        <div class="stream-header">Spending Feed 🧸</div>
+        {% for e in expense %}
+        <div class="transaction-bubble">
+            <div class="bubble-info">
+                <span class="bubble-title">{{ e.description|truncatechars:18 }}</span>
+                <span class="bubble-date">🛍️ {{ e.datetime|date:"D, d M" }}</span>
+            </div>
+            <div class="bubble-amount expense-bg">-৳{{ e.amount }}</div>
+            <div class="bubble-actions">
+                <a href="{% url 'edit_expense' e.pk %}" title="Edit">📝</a>
+                <a href="{% url 'delete_expense' e.pk %}" title="Delete" onclick="return confirm('Delete this treat?')">🗑️</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align:center; color:#ccc; padding:30px; font-style:italic;">Pocket is safe 🎀</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<div class="floating-actions">
+    <a href="{% url 'Add_cash' %}" class="action-btn cash-btn"><span>+</span> Add Cash</a>
+    <a href="{% url 'Add_expense' %}" class="action-btn expense-btn"><span>-</span> Add Spent</a>
+</div>
+
+<div style="height: 120px;"></div>
+
+{% endblock body %}

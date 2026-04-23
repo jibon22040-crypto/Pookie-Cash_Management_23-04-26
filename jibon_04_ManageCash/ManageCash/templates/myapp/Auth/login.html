@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pookie Login 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soft-pink: #ffe4ef;
+            --medium-pink: #ffb6c1;
+            --accent-pink: #ff85b3;
+            --pookie-white: #ffffff;
+            --text-gray: #8a6d78;
+        }
+
+        body {
+            background-color: var(--soft-pink);
+            /* Soft heart-pattern feel with CSS dots */
+            background-image: radial-gradient(var(--medium-pink) 0.8px, transparent 0.8px);
+            background-size: 24px 24px;
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--text-gray);
+        }
+
+        .login-container {
+            background: var(--pookie-white);
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(255, 133, 179, 0.15);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            border: 4px solid var(--pookie-white);
+            outline: 2px solid var(--medium-pink);
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--accent-pink);
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+        }
+
+        /* Django form formatting */
+        form p {
+            text-align: left;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        /* Styling the auto-generated Django inputs */
+        input[type="text"], 
+        input[type="password"], 
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 8px;
+            border: 2px solid var(--soft-pink);
+            border-radius: 18px;
+            box-sizing: border-box;
+            background-color: #fff9fb;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(255, 133, 179, 0.2);
+        }
+
+        button {
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(255, 133, 179, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5c99;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 133, 179, 0.4);
+        }
+
+        .register-link {
+            display: block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: var(--accent-pink);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .register-link:hover {
+            color: #ff5c99;
+            text-decoration: underline;
+        }
+
+        /* Tiny heart decor */
+        .login-container::after {
+            content: "☁️ ✨ ☁️";
+            display: block;
+            margin-top: 20px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login 🎀</h2>
+        
+        <form method='POST'>
+            {% csrf_token %}
+            
+            <div class="form-fields">
+                {{ form.as_p }}
+            </div>
+            
+            <button type="submit">Let's Go! ✨</button>
+        </form>
+
+        <a href='/' class="register-link">Don't have an account? Register</a>
+    </div>
+
+</body>
+</html>
